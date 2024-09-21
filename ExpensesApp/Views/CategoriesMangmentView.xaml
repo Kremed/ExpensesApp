@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ExpensesApp.Views.CategoriesMangmentView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sqliteTabels="clr-namespace:ExpensesApp.Models.SqliteTabels"
+    Title="CategoriesMangmentView"
+    FlowDirection="RightToLeft">
+
+    <VerticalStackLayout Margin="20">
+
+        <Grid ColumnDefinitions="*,auto" ColumnSpacing="10">
+
+            <Entry
+                x:Name="TxtCategoryName"
+                Grid.Column="0"
+                Placeholder="أكتب أسم التصنيف هنا ......" />
+
+            <Button
+                x:Name="BtnCreateNewCategory"
+                Grid.Column="1"
+                Padding="30,0"
+                BackgroundColor="Transparent"
+                BorderColor="{StaticResource Primary}"
+                BorderWidth="2"
+                Clicked="BtnCreateNewCategory_Clicked"
+                CornerRadius="0"
+                HeightRequest="35"
+                Text="أضافة"
+                TextColor="{StaticResource Primary}" />
+
+        </Grid>
+
+        <CollectionView x:Name="CategoriesCollectionView" Margin="0,20">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="sqliteTabels:Category">
+                    <Border
+                        Padding="10"
+                        HeightRequest="60"
+                        HorizontalOptions="FillAndExpand"
+                        Stroke="{StaticResource Primary}"
+                        VerticalOptions="FillAndExpand">
+
+                        <Grid
+                            ColumnDefinitions="*,auto"
+                            HeightRequest="60"
+                            VerticalOptions="FillAndExpand">
+
+                            <StackLayout Grid.Column="0" VerticalOptions="CenterAndExpand">
+                                <Label FontSize="10" Text="{Binding Id, StringFormat='معرف التصنيف : {0}'}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding Name}"
+                                    TextColor="{StaticResource Primary}" />
+                            </StackLayout>
+
+                            <Button
+                                Grid.Column="1"
+                                Padding="15,0"
+                                BackgroundColor="Transparent"
+                                CornerRadius="0"
+                                HeightRequest="30"
+                                ImageSource="trash.png"
+                                TextColor="White">
+                                <Button.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding Id}"
+                                        NumberOfTapsRequired="1"
+                                        Tapped="TapGestureRecognizer_Tapped" />
+                                </Button.GestureRecognizers>
+                            </Button>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </VerticalStackLayout>
+
+</ContentPage>

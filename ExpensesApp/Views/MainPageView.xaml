@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ExpensesApp.Views.MainPageView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="MainPageView">
+
+    <VerticalStackLayout Margin="20" Spacing="10">
+
+        <Button
+            x:Name="BtnGoExpensesView"
+            CornerRadius="0"
+            Text="أدارة المصروفـات" />
+
+        <Button
+            x:Name="BtnGoToCategoriesView"
+            Clicked="BtnGoToCategoriesView_Clicked"
+            CornerRadius="0"
+            Text="تصنيفات المصروفات" />
+
+        <Button
+            x:Name="BtnCheckConnection"
+            Clicked="BtnCheckConnection_Clicked"
+            CornerRadius="0"
+            Text="[Check Current Connection]" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
