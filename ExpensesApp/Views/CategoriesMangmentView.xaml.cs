@@ -2,35 +2,25 @@
 
 public partial class CategoriesMangmentView : ContentPage
 {
-    public ISQLiteAsyncConnection Db = null!;
-    //public SQLiteConnectionRepository sqliteConnectionService;
-
-    public CategoriesMangmentView()
+    
+    public ICategorySevice CategorySevice;
+    public CategoriesMangmentView( ICategorySevice CategorySevice)
     {
         InitializeComponent();
 
-        //  this.sqliteConnectionService = sqliteConnectionService;
-
+        this.CategorySevice = CategorySevice;
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            //var isSuccessful = await sqliteConnectionService.InitiDataBaseTabels();
-
-            //if (isSuccessful is not true)
-            //    await DisplayAlert("Issue in Initi Data Base", "لقد واجهنا مشكلة اثناء انشاء قاعدة البيانات المحلية.", "OK");
-
-            //Db = sqliteConnectionService.CreateConnection();
-
             await GetAllCategories();
         });
     }
 
     private async Task GetAllCategories()
     {
-        if (Db is not null)
-        {
-            CategoriesCollectionView.ItemsSource = await Db.Table<Category>().ToListAsync();
-        }
+        var items = await CategorySevice.GetAllICategories();
+       
+        CategoriesCollectionView.ItemsSource = items;
     }
 
     private async void BtnCreateNewCategory_Clicked(object sender, EventArgs e)
@@ -39,13 +29,20 @@ public partial class CategoriesMangmentView : ContentPage
         {
             Category category = new Category { Name = TxtCategoryName.Text.Trim() };
 
-            await Db.InsertAsync(category);
+            var isDoneSuccssefuly = await CategorySevice.CreateNewCategoryAsync(category);
 
-            await GetAllCategories();
+            if (isDoneSuccssefuly )
+            {
+                await GetAllCategories();
 
-            await DisplayAlert("عملية ناجحة", "تمت أضافة التصنيف بنجاح", "OK");
+                await DisplayAlert("عملية ناجحة", "تمت أضافة التصنيف بنجاح", "OK");
 
-            TxtCategoryName.Text = "";
+                TxtCategoryName.Text = "";
+            }
+            else
+            {
+                await DisplayAlert("عملية فاشلة", "لم تتم عملية حفظ التصنيف, الرجاء أعادة المحاولة مرة اخرئ", "OK");
+            }
         }
         catch (Exception ex)
         {
@@ -59,15 +56,21 @@ public partial class CategoriesMangmentView : ContentPage
         {
             if (int.TryParse(e.Parameter!.ToString(), out var categoryID))
             {
-                var selectedCategory = await Db.Table<Category>().FirstOrDefaultAsync(cat => cat.Id == categoryID);
+                var IsDeleted = await CategorySevice.DeleteCategoryByIdAsync(categoryID);
 
-                await Db.DeleteAsync(selectedCategory);
-
-                await GetAllCategories();
+                if (IsDeleted)
+                {
+                    await GetAllCategories();
+                }
+                else
+                {
+                    await DisplayAlert("عملية فاشلة", "لم يتم حذف التصنيف , الرجاء أعادة المحاولة مرة اخرئ", "OK");
+                }
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            await DisplayAlert("Exception", ex.Message, "OK");
         }
     }
 }

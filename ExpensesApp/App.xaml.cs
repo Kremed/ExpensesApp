@@ -1,15 +1,20 @@
-﻿namespace ExpensesApp;
+﻿
+
+
+namespace ExpensesApp;
 
 public partial class App : Application
 {
     //IServiceProvider يتم إنشاؤه تلقائيًا بواسطة إطار .NET 
     //IoC ولا يحتاج إلى تسجيله صراحةً في حاوية .
-    public App(IServiceProvider serviceProvider)
+    //IServiceProvider serviceProvider
+    public App()
     {
         InitializeComponent();
         
-        var page = serviceProvider.GetRequiredService<MainPageView>();
+       // var page = serviceProvider.GetRequiredService<MainPageView>();
 
-        MainPage = page;
+        MainPage = new AppShell();
     }
+
 }

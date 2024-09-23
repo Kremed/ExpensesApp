@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell
+    x:Class="ExpensesApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:ExpensesApp.Views"
+    Title="AppShell"
+    Padding="10,20"
+    BackgroundColor="#F5EDED"
+    FlyoutBackgroundColor="{AppThemeBinding Dark={StaticResource OffBlack},
+                                            Light={StaticResource White}}"
+    FlyoutBehavior="Flyout"
+    FlyoutHeaderBehavior="Fixed"
+    Shell.TabBarBackgroundColor="#F5EDED"
+    Shell.TabBarDisabledColor="{AppThemeBinding Light={StaticResource White},
+                                                Dark={StaticResource White}}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource Black},
+                                             Dark={StaticResource Black}}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray400},
+                                                  Dark={StaticResource Gray400}}">
+
+    <Shell.TitleView>
+        <StackLayout
+            Padding="10,0"
+            FlowDirection="LeftToRight"
+            Orientation="Horizontal">
+            <Image
+                HeightRequest="60"
+                Source="logo.png"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </StackLayout>
+    </Shell.TitleView>
+
+    <TabBar>
+        <Tab Title="الرئيسية" Icon="icon08.png">
+            <ShellContent
+                Title="الرئيسية"
+                ContentTemplate="{DataTemplate views:MainPageView}"
+                Icon="icon08.png" />
+        </Tab>
+
+        <Tab Title="المصروفات" Icon="support.png">
+            <ShellContent
+                Title="المصروفات"
+                ContentTemplate="{DataTemplate views:ExpenseMangmentView}"
+                Icon="support.png" />
+        </Tab>
+
+        <Tab Title="التصنيفات" Icon="icon06.png">
+            <ShellContent
+                Title="التصنيفات"
+                ContentTemplate="{DataTemplate views:CategoriesMangmentView}"
+                Icon="icon06.png" />
+        </Tab>
+    </TabBar>
+
+    <!--  أرشيف كروت هدايا  -->
+    <MenuItem>
+        <Shell.MenuItemTemplate>
+            <DataTemplate>
+                <StackLayout
+                    Margin="10,2.5"
+                    FlowDirection="RightToLeft"
+                    HorizontalOptions="FillAndExpand">
+                    <!--<StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
+                    </StackLayout.GestureRecognizers>-->
+                    <Border
+                        Padding="10"
+                        BackgroundColor="#F5EDED"
+                        FlowDirection="RightToLeft">
+                        <Grid
+                            ColumnDefinitions="auto,*,20"
+                            ColumnSpacing="10"
+                            FlowDirection="RightToLeft">
+                            <Image
+                                Grid.Column="2"
+                                HeightRequest="15"
+                                Source="arrow_up_left.png"
+                                VerticalOptions="CenterAndExpand"
+                                WidthRequest="10" />
+
+                            <Label
+                                Grid.Column="1"
+                                FontFamily="Bold"
+                                FontSize="12"
+                                Text="أرشيف كــروت الهدايا"
+                                VerticalOptions="CenterAndExpand"
+                                VerticalTextAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </StackLayout>
+            </DataTemplate>
+        </Shell.MenuItemTemplate>
+    </MenuItem>
+
+</Shell>

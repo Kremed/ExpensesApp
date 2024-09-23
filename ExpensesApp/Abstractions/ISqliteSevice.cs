@@ -4,6 +4,4 @@ public interface ISqliteSevice
 {
     ISQLiteAsyncConnection CreatConnection();
     Task<bool> InitiTables();
-
-   
 }

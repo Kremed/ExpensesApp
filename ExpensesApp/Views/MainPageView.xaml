@@ -3,27 +3,282 @@
     x:Class="ExpensesApp.Views.MainPageView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="MainPageView">
+    xmlns:models="clr-namespace:ExpensesApp.Models.SqliteTabels"
+    Title="MainPageView"
+    FlowDirection="RightToLeft">
 
-    <VerticalStackLayout Margin="20" Spacing="10">
+    <ScrollView VerticalOptions="FillAndExpand">
 
-        <Button
-            x:Name="BtnGoExpensesView"
-            CornerRadius="0"
-            Text="أدارة المصروفـات" />
+        <VerticalStackLayout Margin="10" Spacing="10">
 
-        <Button
-            x:Name="BtnGoToCategoriesView"
-            Clicked="BtnGoToCategoriesView_Clicked"
-            CornerRadius="0"
-            Text="تصنيفات المصروفات" />
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="10"
+                HorizontalOptions="FillAndExpand"
+                RowDefinitions="auto,auto"
+                RowSpacing="10"
+                VerticalOptions="FillAndExpand">
 
-        <Button
-            x:Name="BtnCheckConnection"
-            Clicked="BtnCheckConnection_Clicked"
-            CornerRadius="0"
-            Text="[Check Current Connection]" />
+                <!--  [Column 0 - Row 0]  -->
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="10"
+                    BackgroundColor="#1230AE"
+                    HeightRequest="100"
+                    StrokeShape="RoundRectangle 10"
+                    StrokeThickness="0">
+                    <StackLayout Spacing="5" VerticalOptions="CenterAndExpand">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="12"
+                            Text="المصروفات اليومية"
+                            TextColor="White" />
+                        <Label
+                            x:Name="LblDailyExpenses"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            Text="####.##"
+                            TextColor="White" />
+                    </StackLayout>
+                </Border>
 
-    </VerticalStackLayout>
+                <!--  [Column 1 - Row 0]  -->
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Padding="10"
+                    BackgroundColor="#4F75FF"
+                    HeightRequest="100"
+                    StrokeShape="RoundRectangle 10"
+                    StrokeThickness="0">
+                    <StackLayout Spacing="5" VerticalOptions="CenterAndExpand">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="12"
+                            Text="المصروفات الشهرية"
+                            TextColor="White" />
+                        <Label
+                            x:Name="LblMonthlyExpenses"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            Text="####.##"
+                            TextColor="White" />
+                    </StackLayout>
+                </Border>
+
+                <!--  ===========================================  -->
+
+                <!--  [Column 0 - Row 1]  -->
+                <Border
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Padding="10"
+                    BackgroundColor="#00CCDD"
+                    HeightRequest="100"
+                    StrokeShape="RoundRectangle 10"
+                    StrokeThickness="0">
+                    <StackLayout Spacing="5" VerticalOptions="CenterAndExpand">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="12"
+                            Text="أجمالي السنة"
+                            TextColor="White" />
+                        <Label
+                            x:Name="LblYearlyExpenses"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            Text="####.##"
+                            TextColor="White" />
+                    </StackLayout>
+                </Border>
+
+            </Grid>
+
+            <Grid ColumnDefinitions="*,auto,auto" ColumnSpacing="10">
+                <Label
+                    Margin="0,10"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="كشــف أخر حركـات :" />
+
+                <Button
+                    Grid.Column="2"
+                    Padding="10,0"
+                    BackgroundColor="#1230AE"
+                    BorderWidth="1"
+                    Clicked="BtnGoExpensesView_Clicked"
+                    CornerRadius="0"
+                    FontSize="10"
+                    HeightRequest="30"
+                    Text="أضافة +"
+                    TextColor="White" />
+
+                <Button
+                    Grid.Column="1"
+                    Padding="10,0"
+                    BackgroundColor="Transparent"
+                    BorderColor="#1230AE"
+                    BorderWidth="1"
+                    CornerRadius="0"
+                    FontSize="10"
+                    HeightRequest="30"
+                    Text="عرض الكل"
+                    TextColor="#1230AE" />
+            </Grid>
+
+            <CollectionView
+                x:Name="ExpensesCollection"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+
+                    <DataTemplate x:DataType="models:Expense">
+
+                        <Border
+                            Padding="10,0"
+                            BackgroundColor="#F5F7F8"
+                            HeightRequest="75"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0">
+
+                            <Grid ColumnDefinitions="30,*,auto">
+
+                                <!--  ID  -->
+                                <Label
+                                    Grid.Column="0"
+                                    FontSize="10"
+                                    Text="{Binding Id}"
+                                    VerticalOptions="Center" />
+
+                                <!--  Title + Date  -->
+                                <StackLayout Grid.Column="1" VerticalOptions="CenterAndExpand">
+
+                                    <Label
+                                        FontSize="10"
+                                        Text="{Binding Time}"
+                                        TextColor="#1230AE" />
+                                    <Label
+                                        Margin="0,10,0,0"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        Text="{Binding Title}" />
+
+                                    <Label FontSize="10" Text="{Binding Descption}" />
+                                </StackLayout>
+
+                                <!--  Amount + Category Name  -->
+                                <StackLayout
+                                    Grid.Column="2"
+                                    Spacing="5"
+                                    VerticalOptions="CenterAndExpand">
+
+                                    <Border
+                                        Grid.Column="2"
+                                        Margin="0,0,0,10"
+                                        Padding="5,3"
+                                        BackgroundColor="Transparent"
+                                        HorizontalOptions="End"
+                                        Stroke="#1230AE"
+                                        StrokeShape="RoundRectangle 5"
+                                        StrokeThickness="1">
+                                        <Label
+                                            FontSize="10"
+                                            Text="{Binding CategoryName}"
+                                            TextColor="#1230AE" />
+                                    </Border>
+
+                                    <Label
+                                        Grid.Column="2"
+                                        FontAttributes="Bold"
+                                        HorizontalTextAlignment="End"
+                                        Text="{Binding Amount, StringFormat='LYD {0}'}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+                <!--  عندما تكون القائمة لا تحتوي علي عناصر : EmptyView  -->
+                <CollectionView.EmptyView>
+                    <ContentView>
+
+                        <Border Margin="10" HeightRequest="200">
+
+                            <StackLayout
+                                Padding="10"
+                                HorizontalOptions="CenterAndExpand"
+                                VerticalOptions="CenterAndExpand">
+
+                                <ActivityIndicator IsRunning="True" IsVisible="True" />
+                                <Label
+                                    FontFamily="Bold"
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    Text="لايوجد بيانات لعرضها الان" />
+                                <Label
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    Text="قم بــأضافة مصروفات الان" />
+                            </StackLayout>
+
+                        </Border>
+
+                    </ContentView>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <StackLayout IsVisible="False">
+
+
+                <Button
+                    x:Name="BtnGoExpensesView"
+                    Clicked="BtnGoExpensesView_Clicked"
+                    CornerRadius="0"
+                    Text="أدارة المصروفـات" />
+
+                <Button
+                    x:Name="BtnGoToCategoriesView"
+                    Clicked="BtnGoToCategoriesView_Clicked"
+                    CornerRadius="0"
+                    Text="تصنيفات المصروفات" />
+
+                <Button
+                    x:Name="BtnCheckConnection"
+                    Clicked="BtnCheckConnection_Clicked"
+                    CornerRadius="0"
+                    Text="[Check Current Connection]" />
+            </StackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
 
 </ContentPage>

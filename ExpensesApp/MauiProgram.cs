@@ -25,12 +25,20 @@ public static class MauiProgram
 
         //Services =>
         builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
+
         builder.Services.AddSingleton<ISqliteSevice, SqliteSevice>();
+
         builder.Services.AddSingleton<IUserSevice, UserSevice>();
 
+        builder.Services.AddSingleton<IExpenseSevice, ExpenseSevice>();
+
+        builder.Services.AddSingleton<ICategorySevice, CategorySevice>();
+
         //Views =>
-        builder.Services.AddTransient<CategoriesMangmentView>();
+        builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<MainPageView>();
+        builder.Services.AddTransient<ExpenseMangmentView>();
+        builder.Services.AddTransient<CategoriesMangmentView>();
 
         return builder.Build();
     }

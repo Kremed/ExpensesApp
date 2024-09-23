@@ -1,15 +1,14 @@
-﻿
-
-namespace ExpensesApp.Views;
+﻿namespace ExpensesApp.Views;
 public partial class MainPageView : ContentPage
 {
     public IConnectivity connectivityService;
-
     public IServiceProvider serviceProvider;
-    public IUserSevice userSevice;
+
+    public IExpenseSevice expenseSevice;
 
     public MainPageView(
-        IUserSevice userSevice,
+
+        IExpenseSevice expenseSevice,
         IConnectivity connectivityService,
         IServiceProvider serviceProvider)
     {
@@ -19,16 +18,54 @@ public partial class MainPageView : ContentPage
 
         this.connectivityService = connectivityService;
 
-        this.userSevice = userSevice;
-
-
+        this.expenseSevice = expenseSevice;
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             CheckInternetConniction();
+
+            await SetStartData();
+
         });
     }
 
+
+    protected async override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        CheckInternetConniction();
+
+        await SetStartData();
+    }
+
+    public async Task SetStartData()
+    {
+        try
+        {
+            var allExpenses = await expenseSevice.GetAllIExpenses();
+
+            ExpensesCollection.ItemsSource = allExpenses.OrderByDescending(exp => exp.Time).Take(5);
+
+            LblDailyExpenses.Text = allExpenses
+                                    .Where(Expens => Expens.Time.Date == DateTime.Now.Date)
+                                    .Sum(Expens => Expens.Amount)
+                                    .ToString() + " LYD";
+
+            LblMonthlyExpenses.Text = allExpenses
+                                      .Where(Expens => Expens.Time.Month == DateTime.Now.Month && Expens.Time.Year == DateTime.Now.Year)
+                                      .Sum(Expens => Expens.Amount)
+                                      .ToString() + " LYD";
+
+            LblYearlyExpenses.Text = allExpenses
+                                      .Where(Expens => Expens.Time.Year == DateTime.Now.Year)
+                                      .Sum(Expens => Expens.Amount)
+                                      .ToString() + " LYD";
+        }
+        catch
+        {
+        }
+    }
 
     private async void CheckInternetConniction()
     {
@@ -71,26 +108,6 @@ public partial class MainPageView : ContentPage
     {
         try
         {
-            var user = new UserTable
-            {
-                UserEamil = "Moatasemkremed@gmail.com",
-                UserName = "Moatasem kremed",
-                UserPhone = "0021892447464",
-                UserPassword = "Aa21892447464"
-            };
-           
-           
-           var ffff = await userSevice.CreateNewUseAsync(user);
-
-
-
-
-
-
-
-
-
-            //await Navigation.PushModalAsync(new CategoriesMangmentView());
             var page = serviceProvider.GetRequiredService<CategoriesMangmentView>();
 
             await Navigation.PushModalAsync(page);
@@ -98,5 +115,14 @@ public partial class MainPageView : ContentPage
         catch (Exception)
         {
         }
+    }
+
+    private async void BtnGoExpensesView_Clicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"{nameof(ExpenseMangmentView)}");
+
+        //var page = serviceProvider.GetRequiredService<ExpenseMangmentView>();
+        //
+        //await Navigation.PushModalAsync(page);
     }
 }
